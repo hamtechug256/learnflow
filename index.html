@@ -8,30 +8,33 @@
 </head>
 <body>
     <div class="container">
-        <h1>LearnFlow</h1>
+        <h1 role="heading" aria-level="1">LearnFlow</h1>
         <p>Your Personalized Skill Navigator</p>
 
-        <div id="message-area" class="message-area"></div>
+        <div id="message-area" class="message-area" role="status" aria-live="polite"></div>
 
         <div class="learning-style-section">
-            <h3>My Learning Style:</h3>
-            <label><input type="radio" name="learning-style" value="reading" checked> Reading/Writing</label>
-            <label><input type="radio" name="learning-style" value="video"> Video/Visual</label>
-            <label><input type="radio" name="learning-style" value="auditory"> Auditory</label>
-            <label><input type="radio" name="learning-style" value="kinesthetic"> Kinesthetic</label>
+            <h3 id="learning-style-heading">My Learning Style:</h3>
+            <div role="radiogroup" aria-labelledby="learning-style-heading">
+                <label><input type="radio" name="learning-style" value="reading" checked aria-label="Reading and Writing"> Reading/Writing</label>
+                <label><input type="radio" name="learning-style" value="video" aria-label="Video and Visual"> Video/Visual</label>
+                <label><input type="radio" name="learning-style" value="auditory" aria-label="Auditory"> Auditory</label>
+                <label><input type="radio" name="learning-style" value="kinesthetic" aria-label="Kinesthetic"> Kinesthetic</label>
+            </div>
         </div>
 
         <div class="goal-input-section">
-            <input type="text" id="learning-goal-input" placeholder="e.g., Become a Web Developer">
-            <button id="generate-path-button">Generate Path</button>
+            <label for="learning-goal-input" class="sr-only">Enter your learning goal</label>
+            <input type="text" id="learning-goal-input" placeholder="e.g., Become a Web Developer" aria-label="Enter your learning goal">
+            <button id="generate-path-button" aria-label="Generate Learning Path">Generate Path</button>
         </div>
 
         <div class="learning-path-section" style="display: none;">
-            <h2>Your Learning Path: <span id="current-goal-display"></span></h2>
-            <div class="progress-bar-container">
+            <h2 role="heading" aria-level="2">Your Learning Path: <span id="current-goal-display"></span></h2>
+            <div class="progress-bar-container" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
                 <div class="progress-bar" id="overall-progress-bar"></div>
             </div>
-            <ul id="learning-path-list"></ul>
+            <ul id="learning-path-list" role="list"></ul>
         </div>
     </div>
 
