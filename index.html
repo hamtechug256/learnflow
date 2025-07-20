@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LearnFlow: Your Personalized Skill Navigator</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>LearnFlow</h1>
+        <p>Your Personalized Skill Navigator</p>
+
+        <div id="message-area" class="message-area"></div>
+
+        <div class="learning-style-section">
+            <h3>My Learning Style:</h3>
+            <label><input type="radio" name="learning-style" value="reading" checked> Reading/Writing</label>
+            <label><input type="radio" name="learning-style" value="video"> Video/Visual</label>
+            <label><input type="radio" name="learning-style" value="auditory"> Auditory</label>
+            <label><input type="radio" name="learning-style" value="kinesthetic"> Kinesthetic</label>
+        </div>
+
+        <div class="goal-input-section">
+            <input type="text" id="learning-goal-input" placeholder="e.g., Become a Web Developer">
+            <button id="generate-path-button">Generate Path</button>
+        </div>
+
+        <div class="learning-path-section" style="display: none;">
+            <h2>Your Learning Path: <span id="current-goal-display"></span></h2>
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="overall-progress-bar"></div>
+            </div>
+            <ul id="learning-path-list"></ul>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
