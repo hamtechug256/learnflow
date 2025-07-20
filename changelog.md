@@ -15,7 +15,7 @@ All notable changes to this project will be documented in this file.
 - Added UI for learning style selection in `index.html`.
 - Added a message area in `index.html` for user feedback.
 - Initialized Node.js project in the root directory (`package.json`).
-- Installed `node-fetch` and `dotenv` for Netlify Function.
+- Installed `node-fetch`, `dotenv`, and `@google/generative-ai` for Netlify Function.
 - Created `netlify/functions` directory structure.
 - Implemented `netlify/functions/generatePath.js` for AI-powered path generation using Gemini API.
 
@@ -28,3 +28,6 @@ All notable changes to this project will be documented in this file.
 - Added basic input validation for the learning goal input in `script.js`.
 - Modified `script.js` to call the Netlify Function for path generation instead of using local predefined data.
 - Removed local `learningGoalsData` and `resourcesData` from `script.js` as data now comes from AI.
+
+### Fixed
+- Resolved Netlify build error by adding `@google/generative-ai` to `package.json` dependencies.
