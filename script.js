@@ -11,9 +11,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentLearningPath = null; // To store the active learning path data
     let selectedLearningStyle = 'reading'; // Default learning style
 
-    let currentLearningPath = null; // To store the active learning path data
-    let selectedLearningStyle = 'reading'; // Default learning style
-
     // --- Functions ---
     function displayMessage(message, type) {
         messageArea.textContent = message;
