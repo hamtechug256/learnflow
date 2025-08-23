@@ -15,8 +15,9 @@ body {
     background-color: var(--bg-color);
     color: var(--font-color);
     display: flex;
-    justify-content: center;
-    align-items: flex-start;
+    flex-direction: column; /* Arrange children vertically */
+    align-items: center; /* Center children horizontally */
+    justify-content: flex-start; /* Align children to the top */
     min-height: 100vh;
 }
 
