@@ -81,8 +81,14 @@ p {
     font-weight: 600;
 }
 
+.learning-style-section div[role="radiogroup"] {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap; /* Allow wrapping on all screen sizes */
+}
+
 .learning-style-section label {
-    margin: 0 10px;
+    margin: 5px 10px; /* Add vertical margin for wrapped items */
     font-size: 0.95em;
     color: var(--light-gray);
     cursor: pointer;
