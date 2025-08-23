@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const learningPathList = document.getElementById('learning-path-list');
     const learningStyleRadios = document.querySelectorAll('input[name="learning-style"]');
     const messageArea = document.getElementById('message-area');
+    const spinner = document.getElementById('spinner-container');
 
     let currentLearningPath = null; // To store the active learning path data
     let selectedLearningStyle = 'reading'; // Default learning style
@@ -293,6 +294,63 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // --- API Integration ---
+    function getResourceTypeFromUrl(url) {
+        const lowerUrl = url.toLowerCase();
+        if (lowerUrl.includes('youtube.com') || lowerUrl.includes('youtu.be')) {
+            return 'video';
+        }
+        if (lowerUrl.includes('github.com') || lowerUrl.includes('codepen.io') || lowerUrl.includes('jsfiddle.net') || lowerUrl.includes('udemy') || lowerUrl.includes('coursera')) {
+            return 'course';
+        }
+        return 'article'; // Default
+    }
+
+    async function generatePathFromAPI(goal) {
+        const API_URL = `http://127.0.0.1:8000/generate_study_path?course=${encodeURIComponent(goal)}&style=${selectedLearningStyle}`;
+
+        displayMessage("Generating your personalized learning path...", "info");
+        learningPathSection.style.display = 'none';
+        spinner.style.display = 'block';
+
+        try {
+            const response = await fetch(API_URL);
+            if (!response.ok) {
+                throw new Error(`API Error: ${response.statusText}`);
+            }
+            const data = await response.json();
+
+            // Map the API response to the structure the UI code expects
+            const formattedPath = {
+                goalId: goal.toLowerCase().replace(/\s+/g, '-'),
+                customName: data.course,
+                steps: data.study_path.map(topic => ({
+                    id: topic.topic.toLowerCase().replace(/\s+/g, '-'),
+                    name: topic.topic,
+                    completed: false,
+                    notes: '',
+                    resources: topic.resources.map(res => ({
+                        name: res.title,
+                        url: res.url,
+                        type: getResourceTypeFromUrl(res.url),
+                        style: selectedLearningStyle
+                    }))
+                }))
+            };
+
+            currentLearningPath = formattedPath;
+            renderLearningPath(currentLearningPath);
+            savePathToLocalStorage();
+            displayMessage("Your personalized learning path is ready!", "success");
+
+        } catch (error) {
+            console.error("Failed to fetch learning path from API:", error);
+            displayMessage("Could not generate path. Please ensure the local Python server is running and try again.", "error");
+        } finally {
+            spinner.style.display = 'none';
+        }
+    }
+
     // --- Event Listeners ---
     learningStyleRadios.forEach(radio => {
         radio.addEventListener('change', (event) => {
@@ -305,25 +363,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     generatePathButton.addEventListener('click', () => {
-        const input = learningGoalInput.value.trim().toLowerCase();
-
-        if (input === '') {
-            displayMessage("Please enter a learning goal.", "error");
-            return;
-        }
-
-        // Simple mapping for now, can be expanded with more robust matching
-        if (input.includes("web dev") || input.includes("web development")) {
-            generateLearningPath("web-development");
-            displayMessage("Learning path generated for Web Development!", "success");
-        } else if (input.includes("data science") || input.includes("ds")) {
-            generateLearningPath("data-science");
-            displayMessage("Learning path generated for Data Science!", "success");
-        } else if (input.includes("digital marketing") || input.includes("dm")) {
-            generateLearningPath("digital-marketing");
-            displayMessage("Learning path generated for Digital Marketing!", "success");
+        const goal = learningGoalInput.value.trim();
+        if (goal) {
+            generatePathFromAPI(goal);
         } else {
-            displayMessage("Sorry, I don't have a predefined path for that goal yet. Please try one of these: Web Development, Data Science, or Digital Marketing.", "error");
+            displayMessage("Please enter a learning goal.", "error");
         }
     });
 

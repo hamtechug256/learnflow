@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LearnFlow: Your Personalized Skill Navigator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -25,8 +28,19 @@
 
         <div class="goal-input-section">
             <label for="learning-goal-input" class="sr-only">Enter your learning goal</label>
-            <input type="text" id="learning-goal-input" placeholder="e.g., Become a Web Developer" aria-label="Enter your learning goal">
+            <input type="text" id="learning-goal-input" list="goal-suggestions" placeholder="e.g., Become a Web Developer" aria-label="Enter your learning goal">
+            <datalist id="goal-suggestions">
+                <option value="Become a Web Developer">
+                <option value="Learn Data Science">
+                <option value="Master Digital Marketing">
+                <option value="Learn Python">
+                <option value="Introduction to Machine Learning">
+            </datalist>
             <button id="generate-path-button" aria-label="Generate Learning Path">Generate Path</button>
+        </div>
+
+        <div id="spinner-container" style="display: none;">
+            <div class="spinner"></div>
         </div>
 
         <div class="learning-path-section" style="display: none;">
