@@ -85,24 +85,34 @@ p {
 .learning-style-section div[role="radiogroup"] {
     display: flex;
     justify-content: center;
-    flex-wrap: wrap; /* Allow wrapping on all screen sizes */
+    flex-wrap: wrap;
+    gap: 10px; /* Space between items */
+    margin-top: 15px;
 }
 
 .learning-style-section label {
-    margin: 5px 10px; /* Add vertical margin for wrapped items */
-    font-size: 0.95em;
-    color: var(--light-gray);
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    border: 1px solid var(--secondary-color);
+    border-radius: 8px;
+    background-color: var(--primary-color);
+    color: var(--font-color);
     cursor: pointer;
-    transition: color 0.3s ease;
+    transition: all 0.3s ease;
+    font-size: 0.95em;
 }
 
 .learning-style-section label:hover {
+    background-color: var(--secondary-color);
     color: #ffffff;
+    border-color: var(--accent-color);
 }
 
 .learning-style-section input[type="radio"] {
     accent-color: var(--accent-color);
-    margin-right: 5px;
+    margin-right: 8px;
+    transform: scale(1.1); /* Slightly larger radio button */
 }
 
 .goal-input-section {
