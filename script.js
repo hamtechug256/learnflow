@@ -307,7 +307,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function generatePathFromAPI(goal) {
-        const API_URL = `http://127.0.0.1:8000/generate_study_path?course=${encodeURIComponent(goal)}&style=${selectedLearningStyle}`;
+        const API_URL = `/api/generate_study_path?course=${encodeURIComponent(goal)}&style=${selectedLearningStyle}`;
 
         displayMessage("Generating your personalized learning path...", "info");
         learningPathSection.style.display = 'none';
