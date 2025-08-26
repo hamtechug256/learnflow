@@ -1,4 +1,5 @@
 
+import os
 import uvicorn
 import time
 import requests
@@ -7,11 +8,11 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from typing import List, Optional
 from fastapi.middleware.cors import CORSMiddleware
+from googleapiclient.discovery import build
 
-# A library for performing Google searches.
-from googlesearch import search
-
-# --- Caching Setup ---
+# --- API and Caching Setup ---
+API_KEY = os.environ.get("GOOGLE_API_KEY")
+SEARCH_ENGINE_ID = os.environ.get("SEARCH_ENGINE_ID")
 CACHE = {}
 CACHE_DURATION_SECONDS = 3600  # 1 hour
 
@@ -38,13 +39,23 @@ app = FastAPI(
 # --- CORS Middleware ---
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allows all origins
+    allow_origins=["*"],
     allow_credentials=True,
-    allow_methods=["*"],  # Allows all methods
-    allow_headers=["*"],  # Allows all headers
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 # --- Helper Functions ---
+def google_search(query: str, num_results: int = 5) -> List[dict]:
+    """Performs a Google search using the Custom Search API."""
+    try:
+        service = build("customsearch", "v1", developerKey=API_KEY)
+        res = service.cse().list(q=query, cx=SEARCH_ENGINE_ID, num=num_results).execute()
+        return res.get('items', [])
+    except Exception as e:
+        print(f"An error occurred during Google search: {e}")
+        return []
+
 def get_topics_from_url(url: str) -> List[str]:
     """Scrapes a URL for h2 and h3 tags to use as topics."""
     try:
@@ -82,15 +93,17 @@ def generate_study_path(course: str, style: str = 'reading'):
     print(f"Searching for curriculum source for: {course}")
     try:
         curriculum_query = f"{course} curriculum syllabus roadmap"
-        source_urls = [url for url in search(curriculum_query, num_results=3, lang="en")]
+        search_results = google_search(curriculum_query, num_results=3)
         
-        if source_urls:
-            print(f"Found source URL: {source_urls[0]}")
-            topics = get_topics_from_url(source_urls[0])
+        if search_results:
+            source_url = search_results[0]['link']
+            print(f"Found source URL: {source_url}")
+            topics = get_topics_from_url(source_url)
 
         if not topics:
             print("Scraping failed, falling back to search titles.")
-            topics = [title for title in search(f"{course} topics", num_results=5, lang="en")]
+            search_results = google_search(f"{course} topics", num_results=5)
+            topics = [result['title'] for result in search_results]
 
         if not topics:
             print("Fallback failed, using generic topics.")
@@ -107,18 +120,17 @@ def generate_study_path(course: str, style: str = 'reading'):
         'auditory': 'podcast audiobook lecture',
         'kinesthetic': 'interactive tutorial hands-on project example'
     }
-    search_keywords = style_keywords.get(style, 'tutorial guide') # Default to general terms
+    search_keywords = style_keywords.get(style, 'tutorial guide')
 
     for topic_title in topics[:10]:
         print(f"Finding '{style}' resources for topic: {topic_title}")
         resources_for_topic = []
         try:
             resource_query = f'{topic_title} {search_keywords}'
-            resource_results = search(resource_query, num_results=3, lang="en")
+            resource_results = google_search(resource_query, num_results=3)
             
-            for url in resource_results:
-                simple_title = url.split('//')[-1].split('/')[0]
-                resources_for_topic.append(Resource(title=simple_title, url=url))
+            for result in resource_results:
+                resources_for_topic.append(Resource(title=result['title'], url=result['link']))
 
         except Exception as e:
             print(f"An error occurred during resource search for '{topic_title}': {e}")

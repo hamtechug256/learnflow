@@ -1,5 +1,5 @@
 fastapi
 uvicorn
-googlesearch-python
+google-api-python-client
 requests
 beautifulsoup4
